@@ -28,4 +28,5 @@ All the services are RESTful applications. So create a webserver with "/" and "/
 ###### 2. Create a HelloREST.Scala
 1. This one takes the result to the totem
 
-
+###### 3. Creating Dockerfile
+1. This one packs your server, HelloREST.scala and puts everything into a container.
