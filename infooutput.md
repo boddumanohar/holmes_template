@@ -13,7 +13,7 @@ Basically this directory docuements very apect of the Service.
 
 #### Info-Output Generation in Golang
 
-```
+```go
 import (
     "github.com/julienschmidt/httprouter"
     "net/http"
@@ -65,9 +65,9 @@ metadata := &Metadata{
 
 ```
 
-#### Info-Output Generation in Golang
+#### Info-Output Generation in Python
 
-```
+```python
 import tornado
 from tornado import web, httpserver, ioloop
 
