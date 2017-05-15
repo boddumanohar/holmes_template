@@ -13,17 +13,19 @@ Now lets discuss about the Generic Template.
 
 ##### Generic Template
 
-###### 1. Create a Hello.lang ( For File Types )
+###### 1. Create a Hello.lang ( **For File Types** )
 
-All the services are RESTful applications. So create a webserver with "/" and "/analyze" directory. 
+All the services are RESTful applications. So create a webserver with "/" and "/analyze" directories. 
 
-1. "/" directory displays about the discription of the Servie and how to use. 
-2. "/analyze" directory analyses the raw data provided.
-    1. Get the  get the argument from the URL file from the OS
-	2. Read configuration file
+1. `/` directory displays general info and discription of the Servie on how to use it.( refer Info-Output )
+2. `/analyze` directory analyses the raw data provided.
+    1. Get the  get the object from the URL file from the OS (refer URL API Scheme)
+	2. Read configuration file ( Refer Read configuration scheme )
 	3. Parse the result by sending the file to `analyser library`.
-	4. Raise Appropriate HTTP Error Code
+	4. Raise Appropriate HTTP Error Code ( refer HTTP error codes )
 	5. Fetch the result and fit into a JSON fil3
 
 ###### 2. Create a HelloREST.Scala
 1. This one takes the result to the totem
+
+
