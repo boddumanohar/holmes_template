@@ -8,7 +8,7 @@ In general, there are 2 kinds of services.
 2. Non File Types
 	These type of services does analysis on non-file types like IPv4/6, Domain.
 
-The only difference while create services occurs in step 1 and step 3 
+The only difference while create services occurs in step 2.1 and step 2.3
 
 ### Generic Template
 
@@ -28,6 +28,12 @@ All the services are RESTful applications. So create a webserver with "/info" an
 1. This one is the access point for the totem to interact with Services. This connects totem with services. This takes the result produced by the service to the totem.
 
 ##### How Totem Interacts with the services?
-In Scala, Dispatch is an asynchronous http library. Let’s do a simple request with Futures. Because of this,
-- the application does not block
-- the application can handle more parallel requests
+WORK IN PROGRESS 
+
+#### 3. Running the entire server in a Docker or Virtual Machine.
+
+In the section we shall discuss role of Docker and virutal machines in Microservices architechture and why we have choosen Docker over everything else.
+
+##### Containerisation vs virtualisation?
+
+WORK IN PROGRESS
