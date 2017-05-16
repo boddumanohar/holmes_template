@@ -1,14 +1,14 @@
 ### Generating Info-output
 
-This report explains what the directory  "/" should contain and how to generate it. At the end I will show an example on how to do it in Golang and Python.
+This sections explains what "/info" directory should contain and how to generate it. At the end I will show an example on how to do it in Golang and Python.
 
-The "/" should contain
+The "/info" should contain
 1. General info about how to use, expected JSON output.
-2. Author
-3. Service name and version
+2. Author name.
+3. Service name and version.
 4. Small Description about the service.
 
-Basically this directory docuements very apect of the Service.
+Basically this directory documents very apect of the Service.
 
 
 #### Info-Output Generation in Golang
