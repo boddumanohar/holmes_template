@@ -1,0 +1,1 @@
+### Sample template for Golang Non-File type
