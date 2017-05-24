@@ -1,36 +1,37 @@
 ### Reading configuration file
 
 
-Before we go about reading configuration file, Lets discuss how Holmes being a distributed sytem, uses configuration files and manages them. 
-The settings of each of these components will be stored in a configuration file.
-
-Configuration files configure the parameters and intial settings for the Services.
+Before we go about reading configuration file, Lets discuss how Holmes being a distributed system, uses configuration files. Configuration files configure the parameters and intial settings for the Services.The settings of each of these components will be stored in a configuration file.
 
 #### Service Configuration  for HolmesTotem
 
-Each Serive in HolmesTotem can be called as a Microservice. The essential settings needed for starting the Service are location in configuraion file. The general file format of configuration files is `.conf`. The format of the text is JSON. The user can change these values to change the behaviour of the Service. The configuration file is read by the service logic.
+Each Service in HolmesTotem can be called as a Microservice. The essential settings needed for starting the Service are location in configuraion file. The general file format of configuration files is `.conf`. The format of the text is JSON. A user can change these values to change the behaviour of the Service. The configuration file is read by the service logic.
 
-For each service, The service author should write create a file called `service.conf` where the essential configuration settings for the service like what ports to listen etc... For example the configuration file(__service.conf__) for (gogadget)[] service is given below
+For each service, The service author should create a file called `service.conf` where the essential configuration settings for the service like what ports to listen etc... For example the configuration file( __service.conf__ ) for [gogadget](https://github.com/HolmesProcessing/Holmes-Totem/blob/master/src/main/scala/org/holmesprocessing/totem/services/gogadget) service is given below
 
 ```json
 {
     "HTTPBinding": ":8080", 
-    "MaxNumberOfObjects": 10000
+    "MaxNumberOfObjects": 10000,
+    "SearchDepth": 10
 }
 ```
+
 #### Centralised Service configuration of HolmesTotem
 
-Holmes system to allows an admin to store the configurations for the Services of Holmes-Totem in a central location and make the system automatically load it from there upon upstart.This is useful when you startup multiple Totem at different locations all working with the same service configuration because copying of all the services everywhere is quite tedious Instead you only have to modify the config file on one machine and upload it and then rebuilt the containers on all the machines. It makes distributed service configuration changes easier.
+Holmes system allows an admin to store the configurations for the Services of Holmes-Totem in a central location and make the system automatically load it from there upon upstart. This is useful when you startup multiple Totem at different locations all working with the same service configuration because copying of all the Services everywhere is quite tedious Instead you only have to modify the config file on one machine and upload it and then rebuilt the containers on all the machines. It makes distributed service configuration changes easier.
 
-Holmes-Storage was extended to allow for storing configuration-files (uploaded over HTTP) into its database and query them (also over HTTP).
-This way, by modifying the Dockerfiles, which are responsible for starting the individual Services, to accept an argument specifying the location of the file `service.conf`. The docker-compose-file therefore takes a look at environment variables pointing to the running instance of Holmes-Storage and sets these arguments correctly for each Service. By doing this, whenever the containers are built, the configuration-files are pulled from the server.
+Holmes-Storage was extended to allow for storing configuration-files (uploaded over HTTP) into its database and query them (also over HTTP). The [upload_config.sh](https://github.com/HolmesProcessing/Holmes-Totem/blob/master/config/upload_configs.sh) script can be used for uploading configuration to Storage. This script creates environment variables `CONFSTORAGE` which storage the uri where the configuration files are stored in Storage and configuration files are uploaded to storage. The [compose_download_conf.sh](https://github.com/HolmesProcessing/Holmes-Totem/blob/master/config/compose_download_conf.sh) script creates the environment variable for each Service like for example `CONFSTORAGE_ASNMETA` which contains the uri of the configuration file for the Service.
 
-Totem part consisted only of the upload_config.sh and compose_download_conf.sh scripts. As you can see in the docker-compose.yml.example,  the services always have a line like this:
 
+The docker-compose.yml.example therefore takes a look at environment variables pointing to the running instance of Holmes-Storage and sets these arguments correctly for each Service. By doing this, whenever the containers are built, the configuration-files are pulled from the server. As you can see in the docker-compose.yml.example, the Services always have a line like this:
+```
 conf: ${CONFSTORAGE_ASNMETA}service.conf
+```
 
-Usually the environment variable CONFSTORAGE_ASNMETA (and all the others as well) are empty, so the docker-files just get the local config version
+Usually the environment variable `CONFSTORAGE_ASNMETA` (and all the others as well) are empty, so the docker-files just get the local config version
 
+Also The following are the modifications done for Dockerfile to accept an argument specifying the location of the file `service.conf`
 ```
 # add the configuration file (possibly from a storage uri)
 ARG conf=service.conf
@@ -46,14 +47,9 @@ Each Service runs independently in an isolated docker container.The configuratio
 Some computer programs only read their configuration files at startup.
 This configuration settings will be used by this service only. 
 
-```
-
 Reading configuration is just as easy as reading reason file. I will show how to read JSON and how to use this in Services
-1. Golang
-2. Python
-
-
-
+1. [Golang](##### Reading configuration in Golang)
+2. [Python](##### Reading configuration in Python)
 
 ##### Reading configuration in Golang
 
