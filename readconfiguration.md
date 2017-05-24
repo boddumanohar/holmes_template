@@ -48,8 +48,8 @@ Some computer programs only read their configuration files at startup.
 This configuration settings will be used by this service only. 
 
 Reading configuration is just as easy as reading reason file. I will show how to read JSON and how to use this in Services
-1. [Golang](##### Reading configuration in Golang)
-2. [Python](##### Reading configuration in Python)
+1. Golang
+2. Python
 
 ##### Reading configuration in Golang
 
@@ -57,12 +57,17 @@ With the json package it's a snap to read JSON data into your Go programs. The j
 
 ```go
 import (
-"encoding/json" "flag" "os"
+    "encoding/json" 
+    "flag" 
+    "os"
 )
 
 // ....
 
-var config *Config var configPath string
+var (
+    config *Config
+    configPath string
+)
 
 // ....
 
