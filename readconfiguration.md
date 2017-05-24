@@ -1,23 +1,61 @@
-##e Reading configuration file
+### Reading configuration file
 
-Each Totem Service runs independently in an isolated docker container. The configuration settings for the Serivice has to be provided in `service.conf`. The configuration settings feeded into this file is used by the service logic for the working of the Service.
 
-HolesProcessing uses JSON format for all the configuration files. This is because its easy for machines to parse. 
+Before we go about reading configuration file, Lets discuss how Holmes being a distributed sytem, uses configuration files and manages them. 
+The settings of each of these components will be stored in a configuration file.
+
+Configuration files configure the parameters and intial settings for the Services.
+
+#### Service Configuration  for HolmesTotem
+
+Each Serive in HolmesTotem can be called as a Microservice. The essential settings needed for starting the Service are location in configuraion file. The general file format of configuration files is `.conf`. The format of the text is JSON. The user can change these values to change the behaviour of the Service. The configuration file is read by the service logic.
+
+For each service, The service author should write create a file called `service.conf` where the essential configuration settings for the service like what ports to listen etc... For example the configuration file(__service.conf__) for (gogadget)[] service is given below
 
 ```json
 {
-	"HTTPBinding": ":8080", 
-	"MaxNumberOfObjects": 10000 ,
+    "HTTPBinding": ":8080", 
+    "MaxNumberOfObjects": 10000
 }
 ```
+#### Centralised Service configuration of HolmesTotem
 
-Reading configuration is different for different languages. I will show how to read JSON and how to use this in Services in Golang and Python.
-##### In Golang
+Holmes system to allows an admin to store the configurations for the Services of Holmes-Totem in a central location and make the system automatically load it from there upon upstart.This is useful when you startup multiple Totem at different locations all working with the same service configuration because copying of all the services everywhere is quite tedious Instead you only have to modify the config file on one machine and upload it and then rebuilt the containers on all the machines. It makes distributed service configuration changes easier.
+
+Holmes-Storage was extended to allow for storing configuration-files (uploaded over HTTP) into its database and query them (also over HTTP).
+This way, by modifying the Dockerfiles, which are responsible for starting the individual Services, to accept an argument specifying the location of the file `service.conf`. The docker-compose-file therefore takes a look at environment variables pointing to the running instance of Holmes-Storage and sets these arguments correctly for each Service. By doing this, whenever the containers are built, the configuration-files are pulled from the server.
+
+Totem part consisted only of the upload_config.sh and compose_download_conf.sh scripts. As you can see in the docker-compose.yml.example,  the services always have a line like this:
+
+conf: ${CONFSTORAGE_ASNMETA}service.conf
+
+Usually the environment variable CONFSTORAGE_ASNMETA (and all the others as well) are empty, so the docker-files just get the local config version
+
+```
+# add the configuration file (possibly from a storage uri)
+ARG conf=service.conf
+ADD $conf /service/service.conf
+```
+If docker-compose did not set the conf-argument, it defaults to service.conf, otherwise it is left as it was. Docker's ADD can also download the file via HTTP.
+
+
+#### Reading Configuration files for Services.
+
+Each Service runs independently in an isolated docker container.The configuration settings for the Serivice has to be provided in `service.conf`. The configuration settings feeded into this file by the Service logic.
+
+Some computer programs only read their configuration files at startup.
+This configuration settings will be used by this service only. 
+
+```
+
+Reading configuration is just as easy as reading reason file. I will show how to read JSON and how to use this in Services
+1. Golang
+2. Python
 
 
 
 
-Here is the sample configuration file for pdfparse service.
+##### Reading configuration in Golang
 
 With the json package it's a snap to read JSON data into your Go programs. The json package provides Decoder and Encoder types to support the common operation of reading and writing streams of JSON data. We read the JSON file and then we fit the output to Config struct
 
@@ -50,6 +88,7 @@ if err := dec.Decode(&config); err != nil {
 }
 ```
 
+##### Reading configuration in Python
 
 Try opening the path, reading it all in and parsing it as json. If an error occures, throw a tornado.web.HTTPError (well define behaviour by tornado for these)
  If parsing succeeds, update provided config dictionary.
@@ -122,4 +161,3 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-    
