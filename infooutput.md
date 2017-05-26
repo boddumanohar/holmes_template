@@ -1,15 +1,16 @@
-### Generating Info-output
+### How can I  create a SERVICE-INFO page?
 
-This sections explains what "/info" directory should contain and how to generate it. At the end I will show an example on how to do it in Golang and Python.
+You can use Service-info page to view the information about the Service. Basically this page should state every aspect of Service the you are creating.
 
-The "/info" should contain
-1. General info about how to use, expected JSON output.
-2. Author name.
-3. Service name and version.
-4. Small Description about the service.
+The INFO page should contain
 
-Basically this directory documents very apect of the Service.
+1. Author name.
+2. Service name and version. ( or any metadata about the service. )
+3. Brief Description about the Service.
+4. General info about how to use the Service and expected JSON output.
 
+Many dynamic languages generate data by writing code in static HTML files.You could generate this this info into HTML files.
+For instance, JSP is implemented by inserting `<%=....=%>`, PHP by inserting `<?php.....?>`, etc.
 
 #### Info-Output Generation in Golang
 
