@@ -42,7 +42,7 @@ If docker-compose did not set the conf-argument, it defaults to service.conf, ot
 
 #### Reading Configuration files for Services.
 
-Each Service runs independently in an isolated docker container.The configuration settings for the Serivice has to be provided in `service.conf`. The configuration settings feeded into this file by the Service logic.
+Each Service runs independently in an isolated docker container. The configuration settings for the Serivice has to be provided in `service.conf`. When The service runs, it first looks for the configuration file, in order to read its settings, and applies them to the Service. The configuration file has to be in JSON format. 
 
 Some computer programs only read their configuration files at startup.
 This configuration settings will be used by this service only. 
@@ -53,7 +53,7 @@ Reading configuration is just as easy as reading reason file. I will show how to
 
 ##### Reading configuration in Golang
 
-With the json package it's a snap to read JSON data into your Go programs. The json package provides Decoder and Encoder types to support the common operation of reading and writing streams of JSON data. We read the JSON file and then we fit the output to Config struct
+With the "json" package it's a snap to read JSON data into your Go programs. The json package provides Decoder and Encoder types to support the common operation of reading and writing streams of JSON data. We read the JSON file and then we fit the output to Config struct
 
 ```go
 import (

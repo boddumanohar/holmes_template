@@ -1,18 +1,35 @@
-# Holmes_template
+# Creating a New Static-Service.
 
-Now lets discuss about the Generic Template. This template demonstrates how a service is created. This template is language independed.
+## Introduction
 
-In general, there are 2 kinds of services. 
-1. File types
-	These type of services does analysis on files and produces appropriate result.
-2. Non File Types
-	These type of services does analysis on non-file types like IPv4/6, Domain.
+![overview](images/overview2.png)
 
-The only difference while create services occurs in step 2.1 and step 2.3
+_Figure 4.1 Holmes analysis overivew._
 
-### Generic Template
+When a user wants to perform analysis with Totem, the user first has to upload his sample to Holmes-Storage because this is where Totem looks for the sample. The user tasks analysis through Holmes-gateway specifying list of Services with which the file has to be analysed. The Totem takes the sample and distribute the analysis work to its respective static Services. The services perform analysis and returns the results to Totem. Totem then combines all the results and storages in Storage.
 
-#### 1. Create a Hello.lang ( **For File Types** )
+Now we are going to discuss to how to create those Services(_those tiny pods in the above figure_) which does Static-anlaysis. Static-analysis services does not take large time for analysis. To create a new Service, you need to first the select the `analyser library`( like [passivetotal](https://www.passivetotal.org), [pev](http://pev.sourceforge.net), [pdfparse](https://blog.didierstevens.com/programs/pdf-tools/)) which does analysis and learn how to work with them. This will let you know the important commands that will be used for analysis. To make this `analyser library` be able to interact with Totem,create a Service in your language of choice that takes a file and send to analyser library and parse the result to a JSON. And send this JSON back to Totem.
+
+## Template
+
+This tutorial will show you how to create a new static analysis service For Holmes.
+
+I’ll introduce the mechanism of the Service, and explain how to organize various files in the Service.
+
+
+![templatedemo](images/templatedemo.png)
+
+_Figure 4.2 Template mechanism_
+
+
+
+A minimal template has 4 files. `Service.{go,py}`, `Service.conf`, `serviceREST.scala`, `Dockerfile`,
+
+### [`Dockerfile`](./Dockerfile.md)
+This file containerises the entire application.
+
+### [`Service.{go,py}`](./service.lang.md)
+In this file you create Server which can accessed through a port and also you write the logic for how to send `raw_file` to analysis library and convert the ouput to a JSON.
 
 All the services are RESTful applications. So create a webserver with "/info" and "/analyze" directories. 
 
@@ -21,19 +38,37 @@ All the services are RESTful applications. So create a webserver with "/info" an
     1. Scan the URL and get the `raw_file` to be analysed from the filesystem or FTP ( refer [URL API Scheme](./urlapischeme.md) )
 	2. Read the configuration file ( Refer [Read configuration scheme](./readconfiguration.md) )
 	3. Send the `raw_file` to `analyser library` and parse output the result.
-	4. Raise Appropriate HTTP Error Code ( refer [HTTP error codes](./httperrorcodes.md) )
+	4. Raise Appropriate HTTP Error Code ( refer [HTTP error codes](./Errorcodes.md) )
 	5. Fetch the result and fit into a JSON file
 
-#### 2. Create a HelloREST.Scala
-1. This one is the access point for the totem to interact with Services. This connects totem with services. This takes the result produced by the service to the totem.
+### [`Service.conf`](./Service.conf.md)
+This file contains the essential configuration settings for the service.
 
-##### How Totem Interacts with the services?
-WORK IN PROGRESS 
+### [`ServiceREST.scala`](./ServiceREST.scala.md)
+This file interacts with Totem and connects the TOTEM with the Service.
 
-#### 3. Running the entire server in a Docker or Virtual Machine.
+## File type vs Non-file type.
 
-In the section we shall discuss role of Docker and virutal machines in Microservices architechture and why we have choosen Docker over everything else.
+Now lets discuss about the Generic Template. This template demonstrates how a service is created. This template is language independed.
 
-##### Containerisation vs virtualisation?
+In general, there are 2 kinds of services.
+1. File types
+	These type of services does analysis on files and produces appropriate result.
+2. Non File Types
+	These type of services does analysis on non-file types like IPv4/6, Domain.
 
-WORK IN PROGRESS
+The only difference while create services occurs in step 2.1 and step 2.3
+
+
+## DEMO
+ Refer [Analysis with Holmes - DEMO](./workingexample.md)
+
+ ## Troubleshooting
+
+Refer [Troubleshooting](./troubleshooting.md)
+ ## Appendix
+
+* Organisation - any group of people who wants to do analysis.
+* Sources - Source is just a string which identifes the set of samples.
+* raw_file - The file on which you want to perform analysis
+* analyser library - The core library which the Service uses to perform analysis
