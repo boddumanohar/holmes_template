@@ -21,7 +21,7 @@ var (
 	info     *log.Logger
 	pdfparse string
 	metadata Metadata = Metadata{
-		Name:        "pdfparse",
+		Name:        $name,
 		Version:     "0.1",
 		Description: "./README.md",
 		Copyright:   "Copyright 2017 Holmes Group LLC",
