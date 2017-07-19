@@ -1,19 +1,9 @@
-# Pdfparse service for Holmes-Totem
+# $name service for Holmes-Totem
 
 ## Description
-
-A simple service that parses the pdf file. This service explores the structure of the pdf file and dumps the object content into JSON format.
+$description
 
 ### Output
-```json
-results = {
-	"Comments": <int>,
-	"XREF": <int>,
-	"Trailer": <int>,
-	"StartXref": <int>,
-	"IndirectObject": <int>
-}
-```
 
 ## Usage
 

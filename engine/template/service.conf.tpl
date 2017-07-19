@@ -3,7 +3,7 @@
 		"HTTPBinding": ":8080"
 	},
 
-	"pdfparse": {
-		"MaxNumberofObjects": 1000
+	"{$name}": {
+
 	}
 }

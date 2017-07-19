@@ -21,27 +21,17 @@ var (
 	info     *log.Logger
 	pdfparse string
 	metadata Metadata = Metadata{
-		Name:        $name,
-		Version:     "0.1",
+		Name:        "{$name}",
+		Version:     "{$version}",
 		Description: "./README.md",
 		Copyright:   "Copyright 2017 Holmes Group LLC",
 		License:     "./LICENSE",
 	}
 )
 
+//Result structs
 type Result struct {
-	Truncated      bool      `json:"Truncated"`
-	Comments       int       `json:"Comments"`
-	XREF           int       `json:"XREF"`
-	Trailer        int       `json:"Trailer"`
-	StartXref      int       `json:"StartXref"`
-	IndirectObject int       `json:"IndirectObjects"`
-	Objects        []*Object `json:"Objects"`
-}
 
-type Object struct {
-	Category string `json:"Category"`
-	Values   []int  `json:"Values"`
 }
 
 // Config structs
@@ -49,13 +39,13 @@ type Setting struct {
 	HTTPBinding string `json:"HTTPBinding"`
 }
 
-type PDFParse struct {
-	MaxNumberOfObjects int `json:"MaxNumberOfObjects"`
+type {$name}.toUpper struct {
+
 }
 
 type Config struct {
-	Settings Setting  `json:"settings"`
-	Logic    PDFParse `json:"pdfparse"`
+	Settings			Setting  `json:"settings"`
+	{$name}.capital    {$name}.toUpper `json:"{$name}"`
 }
 
 type Metadata struct {
@@ -140,90 +130,25 @@ func handler_analyze(f_response http.ResponseWriter, request *http.Request, para
 	sample_path := "/tmp/" + obj
 	if _, err := os.Stat(sample_path); os.IsNotExist(err) {
 		http.NotFound(f_response, request)
-		//info.Printf("Error accessing sample (file: %s):", sample_path)
-		//info.Println(err)
-		return
-	}
-	process := exec.Command("pdfparse", "--stats", sample_path)
-
-	stdout, err := process.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
+		info.Printf("Error accessing sample (file: %s):", sample_path)
+		info.Println(err)
 		return
 	}
 
-	stdin, err := process.StdinPipe()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	stdin.Close()
+	result := &Result{}
+/************ ADD your Service logic *******************
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*******************************************************/
 
-	if err := process.Start(); err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	line := bufio.NewScanner(stdout)
-
-	// taking first five lines
-	var final [5]int
-	for i := 0; i < 5; i++ {
-		line.Scan()
-		lineSplit := strings.Split(line.Text(), ": ")
-		final[i], err = strconv.Atoi(lineSplit[1])
-	}
-
-	result := &Result{
-		Truncated:      false,
-		Comments:       final[0],
-		XREF:           final[1],
-		Trailer:        final[2],
-		StartXref:      final[3],
-		IndirectObject: final[4],
-		Objects:        make([]*Object, config.Logic.MaxNumberOfObjects),
-	}
-
-	counter := 0
-
-	for line.Scan() {
-		var values = []int{}
-		lineSplit := strings.Split(line.Text(), ": ")
-		name := lineSplit[0]
-		value := strings.Split(lineSplit[1], ", ")
-
-		// convert this array of strings to array of integers
-		for _, i := range value {
-			j, err := strconv.Atoi(i)
-			if err != nil {
-				panic(err)
-			}
-			values = append(values, j)
-		}
-
-		result.Objects[counter] = &Object{
-			Category: name[1 : len(name)-2],
-			Values:   values,
-		}
-		counter++
-
-		if counter == config.Logic.MaxNumberOfObjects {
-			result.Truncated = true
-			break
-		}
-	}
-
-	if result.Truncated {
-		// if we reached the max amount of objects and breaked we need to throw the rest away
-		for line.Text() != "" {
-			line.Scan()
-		}
-	} else {
-		// if not, we need to throw away the unused array slices
-		result.Objects = result.Objects[:counter]
-	}
-
-	f_response.Header().Set("Content-Type", "text/json; charset=utf-8")
+		f_response.Header().Set("Content-Type", "text/json; charset=utf-8")
 	json2http := json.NewEncoder(f_response)
 
 	if err := json2http.Encode(result); err != nil {

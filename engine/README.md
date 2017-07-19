@@ -21,3 +21,12 @@ This project creates a template engine which will have a set of templates. When 
 This Engine is specially focussed towards microservices architechture. 
 
 A typical template engine will be something like, it will take data and templates as input and return an HTML file. But here, we generate code. So more colloquially, this is a code generation script that is written in GO. 
+
+
+### WHY
+
+
+### Design Goals
+
+
+### Working
