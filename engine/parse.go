@@ -1,45 +1,29 @@
-// parses the commandline user input and creates a service with those specification
-// This file parses the .tpl files
-
-// Token Representation
-
-/*type Token int
-
-const (
-	$Name,
-	$Version
-	EOF
-)
-
-type Parser struct {
-
-// using string replace
-	func fileRead(getPath string, searchkey string) {
-		    buf, _ := ioutil.ReadFile(getPath)
-			    strings.Replace(string(buf), searchkey, strings.ToUpper(searchkey), -1)
-			}
-
-/* Workflow
-1. copy fname.format.tpl to fname.format
-2. Parse the configfile and get the name SERVICENAME, VERSION Info
-2. replace {$name} with SERVICENAME
-	a. filename.Replace($name, SERVICENAME);
-
-*/
-
-// copy fname.format.tpl to format.tpl
-
 package main
 
 import (
 	"os"
+	"bytes"
+	"fmt"
+	"io/ioutil"
 )
 
 func main() {
+	// rename files
 	os.Rename("template/service.conf.tpl", "template/service.conf")
-	// but we need to do `template/Dockerfile.tpl` and change them to `Dockerfile.tpl`
-	// copy files https://stackoverflow.com/a/33865286/4291286
+
+	service_name := "helloworld"
 // replace a word other name 
+	input, err := ioutil.ReadFile("template/service.conf") // or anyfile
+	if err != nil {
+	  fmt.Println(err)
+	  os.Exit(1)
+   }
+   output := bytes.Replace(input, []byte("{$name}"), []byte(service_name), -1)
+
+   if err = ioutil.WriteFile("template/service.conf", output, 0666); err != nil {
+			fmt.Println(err)
+			 os.Exit(1)
+	  }
 
 }
 
