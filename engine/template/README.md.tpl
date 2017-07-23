@@ -1,7 +1,7 @@
-# $name service for Holmes-Totem
+# {$name} service for Holmes-Totem
 
 ## Description
-$description
+{$description}
 
 ### Output
 

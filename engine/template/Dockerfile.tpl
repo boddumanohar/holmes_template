@@ -17,12 +17,12 @@ RUN apk add --no-cache \
 # add the files to the container
 COPY LICENSE /service
 COPY README.md /service
-COPY $name.go /service
+COPY {$name}.go /service
 # build pdfparse
-RUN go build $name.go
+RUN go build {$name}.go
 
 # add the configuration file (possibly from a storage uri)
 ARG conf=service.conf
 ADD $conf /service/service.conf
 
-CMD ["./$name", "--config=service.conf"]
+CMD ["./{$name}", "--config=service.conf"]

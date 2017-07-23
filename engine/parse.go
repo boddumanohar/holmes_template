@@ -4,16 +4,26 @@ import (
 	"os"
 	"bytes"
 	"fmt"
+	"io"
+	"log"
 	"io/ioutil"
 )
 
 func main() {
 	servicename := "helloworld"
 	// create a new directory for the service.
+	filenames := []string{"service.conf", "Dockerfile", "README.md", "serviceREST.scala", "service.go"}
 	createDir(servicename)
-	dest := createFile(servicename, "service.conf")
-	parseAndReplace(servicename, dest)
+	for i:=0; i<4; i++ {
+		dest := createFile(servicename, filenames[i])
+		parseAndReplace(servicename, dest)
+	}
+}
 
+func Check(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func createDir(service_name string) {
@@ -21,16 +31,33 @@ func createDir(service_name string) {
 	os.Mkdir(name,0700)
 }
 
-func createFile(service_name string, filename string) string {
-	dest := service_name
+func createFile(service_name, filename string) string {
 	src := "template" + "/" + filename + ".tpl"
-	err := os.Rename(src, dest)
+	dest := service_name + "/" + filename
+	sFile,err := os.Open(src)
+	Check(err)
+
+	eFile, err := os.Create(dest)
+	Check(err)
+
+	_, err = io.Copy(eFile, sFile)
 	if err != nil {
-		panic(err)
-}
+		log.Fatal(err)
+	}
+	err = eFile.Sync()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//err := os.Rename(, dest)
+	//if err != nil {
+	//	panic(err)
+	//}
+
 	return dest
 }
-func parseAndReplace(servicename string, dest string) {
+
+func parseAndReplace(servicename, dest string) {
 // replace a word other name
 
 	input, err := ioutil.ReadFile(dest) // or anyfile
