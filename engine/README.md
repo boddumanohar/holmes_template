@@ -1,32 +1,37 @@
-# Template Generator
-
-*Warning : Under the state of development*
+# Template Generator for Holmes Totem Services
 
 ## OverView
 
-This project generates the boiler plate code required to create a Holmes Totem Service. This not a IDE which generates all the boilerplate code when a project with particular requirements are given.  
-
+This program generates the boiler plate code required to create a Holmes Totem Service. Currently this is only for creating Static Services.
 
 ## Configuration 
 
+Specify the required options for creating service in the configuration file`parse.conf`.
+
+```json
+{
+	servicename : "helloworld"
+	version : 1.0
+}
+```
 
 ## Installation
+You need to have Go installed. Configure the required settings in `parse.conf` and just run `parse.go`file.
 
+```
+$ go run parse.go
+```
 
 ## Implimentation
 
-This project creates a template engine which will have a set of templates. When a user specifies his requirements through commandline, this requirements are stored in a JSON configuration file. This configuration file is fed into template engine, Then the engine outputs the service boilerplate so the user only can concentrate on Service logic without having to worry about other things configurations (for now only service configuration, but later, gRPC settings etcc will come along). This will save time for the user.
+The parser takes the template (in the template folder) and configuration file as input and create a directory with the servicename and creates all the boilerplate code required. After this you can directly jump into servicelogic section of the {servicename}.go and add additional configuration settings and finally will add dependencies to the Dockerfile.
 
+The created folder structure will be:
+```
+ServiceName
+		|-----Service.{go,py}
+		|-----Dockerfile
+		|-----ServiceREST.Scala
+		|-----Service.conf
+```		
 
-This Engine is specially focussed towards microservices architechture. 
-
-A typical template engine will be something like, it will take data and templates as input and return an HTML file. But here, we generate code. So more colloquially, this is a code generation script that is written in GO. 
-
-
-### WHY
-
-
-### Design Goals
-
-
-### Working
