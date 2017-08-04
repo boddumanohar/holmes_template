@@ -1,18 +1,24 @@
 #Holmes Services:
 ## Overview
+Holmes-totem-Serivces is the part of HolmesProcessing that does analysis and creates a JSON file.
+
 All the Planners of HolmesProcessing are Microservices, where Holmes Totem is a central orchestrator for all of these services. For performing analysis HolmesProcessing
-uses Holmes-Totem-Services which are built on the ideas of microservices. These are pluggable services that we once use or remove easily according to the needs.
+uses Holmes-Totem-Services which are built on the ideas of microservices. These are pluggable services that we one can use or remove easily according to the needs.
 
-These are fine grained services and uses a light weight HHTTP protocol for communication.
+Holmes Totem-Services are kind of webservers that does analysis using a particular library and returns a JSON file. The analyser library can be anything We can either use libary or directly parse the commandline output (as we need to do process call and parse the ouput. which is not recomended and time consuming).
 
-Each Totem-Services are atomic and does analysis individually. They don't depend on other Totem-Sevice to create the final output. Also there will not be any interprocess commnication between Totem-Services. The reason for this design choice is that this imporoves fault-tolerance and provides great flexibility. 
+Totem communicates with the services with are running a particular port via HTTP Protocol.
 
-These services are organised around capabilites.
-These enforces modular structure.
+Each services runs in an isolated environment with the illusion that they are the only process running in the system. These are fine grained services and uses a light weight HTTP protocol for communication.
 
-each serivces is can be assummed as a processing with illusion that it's the only process run. Totem Services achieve this by using power of Linux namespaces. In other words, it uses containers to isolate each Service.
+Each Totem-Services are atomic and does analysis individually. They don't depend on other Totem-Sevice to create the final output. Also there will not be any interprocess commnication between Totem-Services. The reason for this design choice is that this imporoves fault-tolerance and provides great flexibility and enforces modular structure.
 
-To communicate with Totem, Holmes Services uses external message queues or HTTP Protocol?
+Totem uses containers to isolate each Service.
+
+we need to build a webserver, with an endpoints.
+
+To communicate with Totem, Holmes Services uses external message queues
+To communicate with services we use. external message queues.
 
 ##Communication Protocol
 Totem Communicates with its services via the http protocol. The request for the service is of type GET with an empty body.
@@ -50,7 +56,15 @@ To make satisfy all the required properties of the Services, Holmes Totem Servic
 
 ### Containerisation
 
-For our purpose, conceptually we need a VM. In docker you are starting a linux container. In case of Vagrant we are literally staring a new VM segmented from the host. We want this Docker because, if we have messed up something, and locked yourself out of the system, its no big deal. You can restart the container. If something Because we are dealing with malware samples, if something gets messed up, the penality should as mininal as possible. Also with docker we always have the same box.
+
+#### Why do we need containerisation
+
+1. easier to boothstrap
+2. When something gets messed up, we have have minimal penality.
+3. 
+
+Choosing the docker image for the microservices of your programming language. How to build docker images and what distributions to use. Choosing lightweight containers will make easier 
+ As explained above, Holmes-Services are simple webservers that does analysis. We need to pack this entire system so that Services get an illusion they are the only Process runing. For our purpose, conceptually we need a VM. What kind of virtualisation do we need? why? We dont need an entire Operating system virtualisation. We only need a process isolation or better yet, we need protable process isolation. In docker you are starting a linux container. In case of Vagrant we are literally staring a new VM segmented from the host. We want this Docker because, if we have messed up something, and locked yourself out of the system, its no big deal. You can restart the container. If something Because we are dealing with malware samples, if something gets messed up, the penality should as mininal as possible. Also with docker we always have the same box.
 
 we must be able to distribute the images to the applications. Easier to use and quick startup. If we want to make a change, we have to reprovision it. Where as with docker, you just can destroy and pull up a new container. 
 
@@ -72,6 +86,11 @@ Docker can be integrated into various infrastructure tools, including Amazon Web
 1. Docker
 2. Go or Python or the language in which we are going to implement 
 3. Suitable containers for the programming language. 
+
+#### Base image.
+`FROM` directive in the Dockerfile. To make images lean, we use [Apine linux](https://www.alpinelinux.org/about/), which is a security oriented lightweight Linux Distribution.
+#### loading files
+#### loading configuration files from the Storage URI
 
 ### Communication with TOTEM
 
