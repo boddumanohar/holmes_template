@@ -1,0 +1,6 @@
+!.gitignore
+!engine/*
+!readconfiguration.md
+!workingexample.md
+!infooutput.md
+!images/

@@ -11,14 +11,14 @@ RUN apk add --no-cache \
 	&& rm -rf /var/cache/apk/*
 
 ###
-# pdfparse specific options
+# {$name} specific options
 ###
 
 # add the files to the container
 COPY LICENSE /service
 COPY README.md /service
 COPY {$name}.go /service
-# build pdfparse
+# build {$name}
 RUN go build {$name}.go
 
 # add the configuration file (possibly from a storage uri)
