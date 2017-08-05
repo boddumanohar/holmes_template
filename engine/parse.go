@@ -43,10 +43,17 @@ func main() {
 	servicename := config.Name
 	lang := config.Language
 	// create a new directory for the service.
-	filenames := []string{"service.conf", "Dockerfile", "README.md", "serviceREST.scala", "service.go"}
+	filenames := []string{"service.conf", "Dockerfile", "README.md", "serviceREST.scala"}
 	createDir(servicename)
-	for i:=0; i<=4; i++ {
+	for i:=0; i<4; i++ {
 		dest := createFile(servicename, filenames[i], lang)
+		parseAndReplace(servicename, dest)
+	}
+	if lang == "go" {
+		dest := createFile(servicename, "service.go", lang)
+		parseAndReplace(servicename, dest)
+	} else {
+		dest := createFile(servicename, "service.py", lang)
 		parseAndReplace(servicename, dest)
 	}
 }
