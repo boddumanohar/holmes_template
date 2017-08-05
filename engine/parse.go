@@ -17,6 +17,8 @@ import (
 // Config
 
 type Config struct {
+	Type string
+	Language string
 	Name string
 	Version string
 	Description string
@@ -39,12 +41,12 @@ func main() {
 
 //	fmt.Println(config.Name)
 	servicename := config.Name
-
+	lang := config.Language
 	// create a new directory for the service.
 	filenames := []string{"service.conf", "Dockerfile", "README.md", "serviceREST.scala", "service.go"}
 	createDir(servicename)
 	for i:=0; i<=4; i++ {
-		dest := createFile(servicename, filenames[i])
+		dest := createFile(servicename, filenames[i], lang)
 		parseAndReplace(servicename, dest)
 	}
 }
@@ -78,8 +80,9 @@ func createDir(service_name string) {
 	os.Mkdir(name,0700)
 }
 
-func createFile(service_name, filename string) string {
-	src := "template" + "/" + filename + ".tpl"
+func createFile(service_name, filename, lang  string) string {
+	lang = strings.ToLower(lang)
+	src := lang + "/" + filename + ".tpl"
 	dest := service_name + "/" + filename
 	sFile,err := os.Open(src)
 	Check(err)

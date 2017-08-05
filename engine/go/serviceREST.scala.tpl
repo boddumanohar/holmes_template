@@ -34,7 +34,7 @@ case class {$name}Work(key: Long, filename: String, TimeoutMillis: Int, WorkType
 }
 
 
-case class {$name}Success(status: Boolean, data: JValue, Arguments: List[String], routingKey: String = "{$name}.result.static.totem", WorkType: String = "{$name}.toUpper") extends WorkSuccess
+case class {$name}Success(status: Boolean, data: JValue, Arguments: List[String], routingKey: String = "{$name}.result.static.totem", WorkType: String = "{$name_toUpper}") extends WorkSuccess
 case class {$name}Failure(status: Boolean, data: JValue, Arguments: List[String], routingKey: String = "", WorkType: String = "{$name}") extends WorkFailure
 
 
