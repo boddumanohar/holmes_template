@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"flag"
+	"unicode"
+	"strings"
 	"log"
 	"io/ioutil"
 )
@@ -106,18 +108,46 @@ func readFile(dest string) (input []byte, err error){
    return input, err
 }
 
+func UcFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
 func parseAndReplace(servicename, dest string) {
 // replace a word other name
 
 	version := config.Version
 	description := config.Description
 
+	upper := strings.ToUpper(servicename)
+	ucfirst := UcFirst(servicename)
+
+
 	input, err := readFile(dest)
-   output := bytes.Replace(input, []byte("{$name}"), []byte(servicename), -1)
-   if err = ioutil.WriteFile(dest, output, 0666); err != nil {
+	output := bytes.Replace(input, []byte("{$name}"), []byte(servicename), -1)
+	if err = ioutil.WriteFile(dest, output, 0666); err != nil {
 			Check(err)
 			 os.Exit(1)
 	  }
+
+//	if servicename == "service.go" {
+	input, err = readFile(dest)
+	output = bytes.Replace(input, []byte("{$name_toUpper}"), []byte(upper), -1)
+	if err = ioutil.WriteFile(dest, output, 0666); err != nil {
+			Check(err)
+			 os.Exit(1)
+		}
+
+	input, err = readFile(dest)
+	output = bytes.Replace(input, []byte("{$name_capital}"), []byte(ucfirst), -1)
+	if err = ioutil.WriteFile(dest, output, 0666); err != nil {
+			Check(err)
+			 os.Exit(1)
+	  }
+
+//	}
 
 	input,err = readFile(dest)
 	output = bytes.Replace(input, []byte("{$version}"), []byte(version), -1)

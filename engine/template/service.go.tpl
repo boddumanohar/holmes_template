@@ -39,13 +39,13 @@ type Setting struct {
 	HTTPBinding string `json:"HTTPBinding"`
 }
 
-type {$name}.toUpper struct {
+type {$name_toUpper} struct {
 
 }
 
 type Config struct {
 	Settings			Setting  `json:"settings"`
-	{$name}.capital    {$name}.toUpper `json:"{$name}"`
+	{$name_capital}    {$name_toUpper} `json:"{$name}"`
 }
 
 type Metadata struct {
